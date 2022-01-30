@@ -77,8 +77,26 @@ class LinearRegression:
 			return 0
 		return normalized_price * (max_price - min_price) + min_price
 
+	def get_regression_line(self):
+		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])
+		min_y, max_y = min(self.data[:, -1]), max(self.data[:, -1])
+		line_x, line_y = [min_x, max_x], []
+		for point in line_x:
+			normalized_x = (point - min_x) / (max_x - min_x)
+			point = self.thetas[1] * normalized_x + self.thetas[0]
+			if point != 0:
+				denormalized_y = point * (max_y - min_y) + min_y
+			else:
+				denormalized_y = 0
+			line_y.append(denormalized_y)
+		return line_x, line_y
+
 	def plot(self):
 		plt.xlabel('Mileage')
 		plt.ylabel('Price')
 		plt.plot(self.data[:, 0], self.data[:, -1], 'bo')
+		line_x, line_y = self.get_regression_line()
+		print(f'line_x={line_x}, line_y={line_y}')
+		plt.plot(line_x, line_y, 'tab:olive', label="Best line")
+		# plt.plot(self.x, b0 + b1 * self.x, c = 'r', linewidth = 5, alpha=.5, solid_capstyle='round')
 		plt.show()
