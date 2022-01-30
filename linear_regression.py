@@ -11,8 +11,6 @@ def normalize(data: np.ndarray, minmax: bool):
 	return (result - result.mean()) / result.std()
 
 
-
-
 def plot_data(x, y, xlabel, ylabel):
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
