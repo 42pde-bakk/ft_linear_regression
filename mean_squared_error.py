@@ -1,8 +1,4 @@
-import sys
-import os
 import argparse
-import cProfile
-import pstats
 from math import pow
 from linear_regression import LinearRegression
 
