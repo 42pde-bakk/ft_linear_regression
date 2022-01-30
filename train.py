@@ -1,21 +1,43 @@
 import sys
 import os
+import argparse
+import cProfile
+import pstats
 from linear_regression import LinearRegression
 
 
-def train(filename):
-    if not filename or not os.path.exists(filename):
+def train(arguments: argparse.Namespace):
+    if arguments.cprofile:
+        pr = cProfile.Profile()
+        pr.enable()
+    if not arguments.filepath or not os.path.exists(arguments.filepath):
         print(f'Please supply a valid data.csv file', file = sys.stderr)
         return
-    linreg = LinearRegression(learning_rate = 0.1, iterations = 300)
-    linreg.load_data('data.csv')
+    linreg = LinearRegression(learning_rate = 0.2, iterations = 300)
+    linreg.load_data(arguments.filepath)
 
     linreg.train()
     linreg.save_thetas()
+    if arguments.cprofile:
+        pr.disable()
+        stats = pstats.Stats(pr)
+        stats.sort_stats('tottime').print_stats(10)
+    if arguments.verbose:
+        linreg.plot()
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser('Train logistic regression algorithm')
+    parser.add_argument('filepath', nargs = '?', help='Filepath for the data.csv file', default=None)
+    parser.add_argument('--verbose', '-v', action='store_true', help='Plot graph')
+    parser.add_argument('--cprofile', action = 'store_true', help = 'Run cProfile to see where most time is spent.')
+    arguments = parser.parse_args()
+    if not arguments.filepath:
+        print(f'Usage: python3 train.py [data.csv]', file = sys.stderr)
+        exit(1)
+    return arguments
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print(f'Usage: python3 train.py [data.csv]', file = sys.stderr)
-    else:
-        train(sys.argv[1])
+    args = parse_arguments()
+    train(args)
