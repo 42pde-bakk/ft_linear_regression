@@ -74,7 +74,7 @@ class LinearRegression:
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
 		if normalized_price < 0:
-			print(f'Warning. Given mileage ({mileage}) too high', file = sys.stderr)
+			# print(f'Warning. Given mileage ({mileage}) too high', file = sys.stderr)
 			return 0
 		return normalized_price * (max_price - min_price) + min_price
 
@@ -97,7 +97,7 @@ class LinearRegression:
 		plt.ylabel('Price')
 		plt.plot(self.data[:, 0], self.data[:, -1], 'bo')
 		line_x, line_y = self.get_regression_line()
-		print(f'line_x={line_x}, line_y={line_y}')
+		# print(f'line_x={line_x}, line_y={line_y}')
 		plt.plot(line_x, line_y, 'tab:olive', label="Best line")
 		# plt.plot(self.x, b0 + b1 * self.x, c = 'r', linewidth = 5, alpha=.5, solid_capstyle='round')
 		plt.show()

@@ -1,3 +1,4 @@
+import sys
 import argparse
 from math import pow
 from linear_regression import LinearRegression
@@ -8,27 +9,31 @@ def calculate_error(args: argparse.Namespace):
 	linreg.load_data(args.data)
 	linreg.load_thetas(args.thetas)
 
-	sum_of_errors_squared = 0
-	sum_total = 0
-	for item in linreg.data:
-		mileage, actual_price = item
+	sum_total = sum_of_errors_squared = 0
+	for mileage, actual_price in linreg.data:
 		estimated_price = linreg.predict(mileage)
 		sum_of_errors_squared += pow(actual_price - estimated_price, 2)
 		sum_total += pow(actual_price, 2)
 	mse = sum_of_errors_squared / linreg.data.shape[0]
 	sum_total /= linreg.data.shape[0]
-	print(f'Total mean squared: {sum_total}, mean squared error: {mse}')
+	if args.verbose:
+		print(f'Total mean squared: {sum_total}, mean squared error: {mse}')
 	pct = 100 - mse / sum_total * 100
 	print(f'Gives an accuracy of {pct:.2f}% (when within the limits of the training dataset, mind you).')
 
 
 def parse_arguments():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--thetas', '-t', action = 'store', help = 'File for the theta values',default = None)
-	parser.add_argument('--data', '-d', action = 'store', help = 'Data.csv', default = None)
+	parser.add_argument('thetas', nargs = '?',  action = 'store', help = 'File for the theta values', default = None)
+	parser.add_argument('data', nargs = '?', action = 'store', help = 'Data.csv', default = None)
+	parser.add_argument('--verbose', '-v', action = 'store_true', help='Show the mean squared error')
 
 	a = parser.parse_args()
 	if not a.thetas or not a.data:
+		if not a.thetas:
+			print(f'Please supply a valid thetas file', file = sys.stderr)
+		else:
+			print(f'Please supply a valid data.csv file', file = sys.stderr)
 		exit(1)
 	return a
 
