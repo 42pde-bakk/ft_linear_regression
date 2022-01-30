@@ -24,6 +24,7 @@ class LinearRegression:
 		self.iterations = iterations
 		self.thetas = np.ndarray
 		self.data = np.ndarray
+		self.x, self.y = np.ndarray, np.ndarray
 
 	@staticmethod
 	def __estimate_price(mileage: int, thetas: np.ndarray) -> float:
@@ -72,8 +73,8 @@ class LinearRegression:
 
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
-		if normalized_price <= 0:
-			print(f'Warning. Given mileage too high', file = sys.stderr)
+		if normalized_price < 0:
+			print(f'Warning. Given mileage ({mileage}) too high', file = sys.stderr)
 			return 0
 		return normalized_price * (max_price - min_price) + min_price
 
