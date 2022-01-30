@@ -6,8 +6,8 @@ from linear_regression import LinearRegression
 
 def calculate_error(args: argparse.Namespace):
 	linreg = LinearRegression()
-	linreg.load_data(args.data)
-	linreg.load_thetas(args.thetas)
+	linreg.load_data(args.data_file)
+	linreg.load_thetas(args.thetas_file)
 
 	sum_total = sum_of_errors_squared = 0
 	for mileage, actual_price in linreg.data:
@@ -24,13 +24,13 @@ def calculate_error(args: argparse.Namespace):
 
 def parse_arguments():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('thetas', nargs = '?',  action = 'store', help = 'File for the theta values', default = None)
-	parser.add_argument('data', nargs = '?', action = 'store', help = 'Data.csv', default = None)
+	parser.add_argument('thetas_file', nargs = '?',  action = 'store', help = 'File for the theta values', default = None)
+	parser.add_argument('data_file', nargs = '?', action = 'store', help = 'Data.csv', default = None)
 	parser.add_argument('--verbose', '-v', action = 'store_true', help='Show the mean squared error')
 
 	a = parser.parse_args()
-	if not a.thetas or not a.data:
-		if not a.thetas:
+	if not a.thetas_file or not a.data_file:
+		if not a.thetas_file:
 			print(f'Please supply a valid thetas file', file = sys.stderr)
 		else:
 			print(f'Please supply a valid data.csv file', file = sys.stderr)

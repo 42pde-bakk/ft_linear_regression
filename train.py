@@ -10,9 +10,6 @@ def train(arguments: argparse.Namespace):
     if arguments.cprofile:
         pr = cProfile.Profile()
         pr.enable()
-    if not arguments.filepath or not os.path.exists(arguments.filepath):
-        print(f'Please supply a valid data.csv file', file = sys.stderr)
-        return
     linreg = LinearRegression(learning_rate = 0.2, iterations = 300)
     linreg.load_data(arguments.filepath)
 
@@ -28,11 +25,11 @@ def train(arguments: argparse.Namespace):
 
 def parse_arguments():
     parser = argparse.ArgumentParser('Train logistic regression algorithm')
-    parser.add_argument('filepath', nargs = '?', help='Filepath for the data.csv file', default=None)
+    parser.add_argument('data_file', nargs = '?', help='Filepath for the data.csv file', default=None)
     parser.add_argument('--verbose', '-v', action='store_true', help='Plot graph')
     parser.add_argument('--cprofile', action = 'store_true', help = 'Run cProfile to see where most time is spent.')
     arguments = parser.parse_args()
-    if not arguments.filepath:
+    if not arguments.data_file:
         print(f'Usage: python3 train.py [data.csv]', file = sys.stderr)
         exit(1)
     return arguments

@@ -44,7 +44,11 @@ class LinearRegression:
 
 	def load_data(self, filename: str):
 		np.set_printoptions(suppress = True)
-		df = pd.read_csv(filename, sep = ',', index_col = False)
+		try:
+			df = pd.read_csv(filename, sep = ',', index_col = False)
+		except FileNotFoundError:
+			print('Please supply a valid path to the data.csv file.', file = sys.stderr)
+			exit(1)
 		self.data = np.array(df, dtype = float)
 		self.x = normalize(self.data[:, :-1], True)
 		self.y = normalize(self.data[:, -1], True)
@@ -56,10 +60,14 @@ class LinearRegression:
 				f.write(str(float(th)) + '\n')
 
 	def load_thetas(self, filename: str):
-		with open(filename, 'r') as f:
-			lines = [float(row) for row in f.read().splitlines()]
-			self.thetas = np.array(lines, dtype = float)
-			assert len(self.thetas) == 2
+		try:
+			with open(filename, 'r') as f:
+				lines = [float(row) for row in f.read().splitlines()]
+		except FileNotFoundError:
+			print('Please supply a valid path to the thetas file.', file = sys.stderr)
+			exit(1)
+		self.thetas = np.array(lines, dtype = float)
+		assert len(self.thetas) == 2
 
 	def train(self):
 		self.thetas = np.zeros(shape = (self.x.shape[1] + 1, 1), dtype = float)
