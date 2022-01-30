@@ -42,7 +42,7 @@ class LinearRegression:
 			tmp_thetas[theta] *= self.learning_rate * (1.0 / m)
 			self.thetas[theta] -= tmp_thetas[theta]
 
-	def load_data(self, filename: str):
+	def load_data(self, filename: str, minmax_normalizing: bool = True):
 		np.set_printoptions(suppress = True)
 		try:
 			df = pd.read_csv(filename, sep = ',', index_col = False)
@@ -50,8 +50,8 @@ class LinearRegression:
 			print('Please supply a valid path to the data.csv file.', file = sys.stderr)
 			exit(1)
 		self.data = np.array(df, dtype = float)
-		self.x = normalize(self.data[:, :-1], True)
-		self.y = normalize(self.data[:, -1], True)
+		self.x = normalize(self.data[:, :-1], minmax_normalizing)
+		self.y = normalize(self.data[:, -1], minmax_normalizing)
 		return self.data[:, :-1], self.data[:, -1]
 
 	def save_thetas(self) -> None:

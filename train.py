@@ -11,7 +11,7 @@ def train(arguments: argparse.Namespace):
         pr = cProfile.Profile()
         pr.enable()
     linreg = LinearRegression(learning_rate = 0.2, iterations = 300)
-    linreg.load_data(arguments.filepath)
+    linreg.load_data(arguments.data_file, minmax_normalizing = True)
 
     linreg.train()
     linreg.save_thetas()

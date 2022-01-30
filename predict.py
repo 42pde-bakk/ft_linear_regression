@@ -40,8 +40,7 @@ def parse_arguments():
 		exit(1)
 	return a
 
+
 if __name__ == '__main__':
-	if len(sys.argv) < 3:
-		print(f'Usage: python3 predict.py [thetas.csv] [data.csv]', file = sys.stderr)
-	else:
-		predict_car_price(*sys.argv[1:])
+	arguments = parse_arguments()
+	predict_car_price(arguments)
