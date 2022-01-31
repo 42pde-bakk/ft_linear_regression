@@ -15,6 +15,7 @@ def train(arguments: argparse.Namespace):
 
 	linreg.train()
 	linreg.save_thetas()
+	print('Finished generating thetas, saved them to thetas.csv')
 	if arguments.cprofile:
 		pr.disable()
 		stats = pstats.Stats(pr)
