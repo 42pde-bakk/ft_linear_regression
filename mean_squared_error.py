@@ -1,6 +1,7 @@
-import sys
 import argparse
+import sys
 from math import pow
+
 from linear_regression import LinearRegression
 
 
@@ -24,9 +25,10 @@ def calculate_error(args: argparse.Namespace):
 
 def parse_arguments():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('thetas_file', nargs = '?',  action = 'store', help = 'File for the theta values', default = None)
+	parser.add_argument('thetas_file', nargs = '?', action = 'store', help = 'File for the theta values',
+	                    default = None)
 	parser.add_argument('data_file', nargs = '?', action = 'store', help = 'Data.csv', default = None)
-	parser.add_argument('--verbose', '-v', action = 'store_true', help='Show the mean squared error')
+	parser.add_argument('--verbose', '-v', action = 'store_true', help = 'Show the mean squared error')
 
 	a = parser.parse_args()
 	if not a.thetas_file or not a.data_file:

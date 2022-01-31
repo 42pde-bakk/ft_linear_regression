@@ -1,9 +1,11 @@
 # ft_linear_regression
+
 An introduction to machine learning
 
-###Usage:
+### Usage:
 
 If you want to run it in a virtual environment do:
+
 ```shell script
 python3 -m venv venv
 ```

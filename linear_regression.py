@@ -1,7 +1,8 @@
 import sys
-import pandas as pd
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 
 def normalize(data: np.ndarray, minmax: bool):
@@ -46,13 +47,13 @@ class LinearRegression:
 		np.set_printoptions(suppress = True)
 		try:
 			df = pd.read_csv(filename, sep = ',', index_col = False)
+			self.data = np.array(df, dtype = float)
+			self.x = normalize(self.data[:, :-1], minmax_normalizing)
+			self.y = normalize(self.data[:, -1], minmax_normalizing)
+			return self.data[:, :-1], self.data[:, -1]
 		except FileNotFoundError:
 			print('Please supply a valid path to the data.csv file.', file = sys.stderr)
 			exit(1)
-		self.data = np.array(df, dtype = float)
-		self.x = normalize(self.data[:, :-1], minmax_normalizing)
-		self.y = normalize(self.data[:, -1], minmax_normalizing)
-		return self.data[:, :-1], self.data[:, -1]
 
 	def save_thetas(self) -> None:
 		with open('thetas.csv', 'w') as f:
@@ -81,9 +82,6 @@ class LinearRegression:
 
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
-		if normalized_price < 0:
-			# print(f'Warning. Given mileage ({mileage}) too high', file = sys.stderr)
-			return 0
 		return normalized_price * (max_price - min_price) + min_price
 
 	def get_regression_line(self):
@@ -92,7 +90,7 @@ class LinearRegression:
 		line_x, line_y = [min_x, max_x], []
 		for point in line_x:
 			normalized_x = (point - min_x) / (max_x - min_x)
-			point = self.thetas[1] * normalized_x + self.thetas[0]
+			point = float(self.thetas[1]) * normalized_x + float(self.thetas[0])
 			if point != 0:
 				denormalized_y = point * (max_y - min_y) + min_y
 			else:
@@ -106,6 +104,6 @@ class LinearRegression:
 		plt.plot(self.data[:, 0], self.data[:, -1], 'bo')
 		line_x, line_y = self.get_regression_line()
 		# print(f'line_x={line_x}, line_y={line_y}')
-		plt.plot(line_x, line_y, 'tab:olive', label="Best line")
+		plt.plot(line_x, line_y, 'tab:olive', label = "Best line")
 		# plt.plot(self.x, b0 + b1 * self.x, c = 'r', linewidth = 5, alpha=.5, solid_capstyle='round')
 		plt.show()
