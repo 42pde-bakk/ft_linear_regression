@@ -47,6 +47,9 @@ class LinearRegression:
 		except FileNotFoundError:
 			print('Please supply a valid path to the data.csv file.', file = sys.stderr)
 			exit(1)
+		except ValueError:
+			print('Are you supplied the right data.csv file?', file = sys.stderr)
+			exit(1)
 
 	def save_thetas(self) -> None:
 		with open('thetas.csv', 'w') as f:
@@ -75,7 +78,8 @@ class LinearRegression:
 
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
-		return normalized_price * (max_price - min_price) + min_price
+		denormalized_price = normalized_price * (max_price - min_price) + min_price
+		return max(0, denormalized_price)  # Free is the highest resale price
 
 	def __get_regression_line(self):
 		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])
