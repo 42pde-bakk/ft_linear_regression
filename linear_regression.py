@@ -12,13 +12,6 @@ def normalize(data: np.ndarray, minmax: bool):
 	return (result - result.mean()) / result.std()
 
 
-def plot_data(x, y, xlabel, ylabel):
-	plt.xlabel(xlabel)
-	plt.ylabel(ylabel)
-	plt.plot(x[:, 0], y, 'bo')
-	plt.show()
-
-
 class LinearRegression:
 	def __init__(self, learning_rate = 0.1, iterations = 300):
 		self.learning_rate = learning_rate
@@ -84,7 +77,7 @@ class LinearRegression:
 		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
 		return normalized_price * (max_price - min_price) + min_price
 
-	def get_regression_line(self):
+	def __get_regression_line(self):
 		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])
 		min_y, max_y = min(self.data[:, -1]), max(self.data[:, -1])
 		line_x, line_y = [min_x, max_x], []
@@ -101,9 +94,7 @@ class LinearRegression:
 	def plot(self):
 		plt.xlabel('Mileage')
 		plt.ylabel('Price')
-		plt.plot(self.data[:, 0], self.data[:, -1], 'bo')
-		line_x, line_y = self.get_regression_line()
-		# print(f'line_x={line_x}, line_y={line_y}')
-		plt.plot(line_x, line_y, 'tab:olive', label = "Best line")
-		# plt.plot(self.x, b0 + b1 * self.x, c = 'r', linewidth = 5, alpha=.5, solid_capstyle='round')
+		plt.plot(self.data[:, 0], self.data[:, -1], 'ok')
+		line_x, line_y = self.__get_regression_line()
+		plt.plot(line_x, line_y, 'tab:pink', label = "Best line")
 		plt.show()
