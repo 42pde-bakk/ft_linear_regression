@@ -18,6 +18,7 @@ class LinearRegression:
 		self.iterations = iterations
 		self.thetas = np.ndarray
 		self.data = np.ndarray
+		self.columns = []
 		self.x, self.y = np.ndarray, np.ndarray
 
 	@staticmethod
@@ -41,6 +42,7 @@ class LinearRegression:
 		try:
 			df = pd.read_csv(filename, sep = ',', index_col = False)
 			self.data = np.array(df, dtype = float)
+			self.columns = [str(col) for col in df.columns]
 			self.x = normalize(self.data[:, :-1], minmax_normalizing)
 			self.y = normalize(self.data[:, -1], minmax_normalizing)
 			return self.data[:, :-1], self.data[:, -1]
@@ -96,8 +98,8 @@ class LinearRegression:
 		return line_x, line_y
 
 	def plot(self):
-		plt.xlabel('Mileage')
-		plt.ylabel('Price')
+		plt.xlabel(self.columns[0])
+		plt.ylabel(self.columns[1])
 		plt.plot(self.data[:, 0], self.data[:, -1], 'ok')
 		line_x, line_y = self.__get_regression_line()
 		plt.plot(line_x, line_y, 'tab:pink', label = "Best line")
