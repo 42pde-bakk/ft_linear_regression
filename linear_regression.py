@@ -104,3 +104,7 @@ class LinearRegression:
 		line_x, line_y = self.__get_regression_line()
 		plt.plot(line_x, line_y, 'tab:pink', label = "Best line")
 		plt.show()
+
+	def plot_predictions(self, inputs: list, outputs: list):
+		plt.plot(inputs, outputs, 'bo')
+		self.plot()

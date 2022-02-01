@@ -7,6 +7,7 @@ from linear_regression import LinearRegression
 
 def predict_car_price(args: argparse.Namespace):
 	linreg = LinearRegression()
+	inputs, outputs = [], []
 	try:
 		linreg.load_data(args.data_file)
 		linreg.load_thetas(args.thetas_file)
@@ -22,11 +23,15 @@ def predict_car_price(args: argparse.Namespace):
 			if mileage < 0:
 				raise ValueError
 			price = linreg.predict(mileage)
+			inputs.append(mileage)
+			outputs.append(int(price))
 			print(f'I predict that a car with {mileage} km mileage will have a price of €{int(price)}')
 		except ValueError:
 			print('Please input a valid mileage in kilometers (please give an int).', file=sys.stderr, flush=True)
 			time.sleep(0.5)  # Otherwise stderr doesn't flush, ikr
 		except KeyboardInterrupt:
+			if args.verbose:
+				linreg.plot_predictions(inputs, outputs)
 			return
 
 
