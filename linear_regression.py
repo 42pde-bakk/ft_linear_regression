@@ -80,6 +80,8 @@ class LinearRegression:
 
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
+		if normalized_price == 0 and all(theta == 0. for theta in self.thetas):
+			return 0
 		denormalized_price = normalized_price * (max_price - min_price) + min_price
 		return max(0, denormalized_price)  # Free is the highest resale price
 
