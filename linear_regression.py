@@ -1,4 +1,5 @@
 import sys
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -75,7 +76,6 @@ class LinearRegression:
 	def predict(self, mileage) -> float:
 		kms, prices = self.data[:, 0], self.data[:, -1]
 		min_km, max_km = min(kms), max(kms)
-
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		return self.__estimate_price(normalized_mileage, self.thetas)
 
