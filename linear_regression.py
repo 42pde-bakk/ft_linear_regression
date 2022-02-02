@@ -1,5 +1,4 @@
 import sys
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -44,7 +43,7 @@ class LinearRegression:
 			self.data = np.array(df, dtype = float)
 			self.columns = [str(col) for col in df.columns]
 			self.x = normalize(self.data[:, :-1], minmax_normalizing)
-			self.y = normalize(self.data[:, -1], minmax_normalizing)
+			self.y = self.data[:, -1]
 			return self.data[:, :-1], self.data[:, -1]
 		except FileNotFoundError:
 			print('Please supply a valid path to the data.csv file.', file = sys.stderr)
@@ -76,14 +75,9 @@ class LinearRegression:
 	def predict(self, mileage) -> float:
 		kms, prices = self.data[:, 0], self.data[:, -1]
 		min_km, max_km = min(kms), max(kms)
-		min_price, max_price = min(prices), max(prices)
 
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
-		normalized_price = self.__estimate_price(normalized_mileage, self.thetas)
-		if normalized_price == 0 and all(theta == 0. for theta in self.thetas):
-			return 0
-		denormalized_price = normalized_price * (max_price - min_price) + min_price
-		return max(0, denormalized_price)  # Free is the highest resale price
+		return self.__estimate_price(normalized_mileage, self.thetas)
 
 	def __get_regression_line(self):
 		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])
