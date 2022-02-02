@@ -27,8 +27,7 @@ def train(arguments: argparse.Namespace):
 def parse_arguments():
 	parser = argparse.ArgumentParser('Train logistic regression algorithm')
 	parser.add_argument('data_file', nargs = '?', help = 'Filepath for the data.csv file', default = 'data.csv')
-	parser.add_argument('thetas_file', nargs = '?', action = 'store', help = 'File for the theta values',
-	                    default = 'thetas.csv')
+	parser.add_argument('thetas_file', nargs = '?', action = 'store', help = 'File for the theta values', default = 'thetas.csv')
 	parser.add_argument('--verbose', '-v', action = 'store_true', help = 'Plot graph')
 	parser.add_argument('--cprofile', action = 'store_true', help = 'Run cProfile to see where most time is spent.')
 	arguments = parser.parse_args()

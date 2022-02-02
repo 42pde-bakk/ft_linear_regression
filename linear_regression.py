@@ -18,8 +18,26 @@ class LinearRegression:
 		self.iterations = iterations
 		self.thetas = np.ndarray
 		self.data = np.ndarray
-		self.columns = []
+		self.columns = list()
+		self.bonus = False
 		self.x, self.y = np.ndarray, np.ndarray
+
+	@staticmethod
+	def __estimate_price_bonus(arr_x: np.ndarray, thetas: np.ndarray) -> float:
+		return thetas[0] + sum([th * float(x) for th, x in zip(thetas[1:], arr_x)])
+
+	def __update_thetas_bonus(self):
+		tmp_thetas = np.zeros(shape = self.thetas.shape, dtype = float)
+		m, n = self.x.shape
+		for i in range(0, m):
+			arr_x, price = self.x[i], self.y[i]
+			toc = LinearRegression.__estimate_price_bonus(arr_x, self.thetas) - price
+			tmp_thetas[0] += toc
+			for i2 in range(1, arr_x.shape[0] + 1):
+				tmp_thetas[i2] += toc * float(arr_x[i2 - 1])
+		for theta in range(0, tmp_thetas.shape[0]):
+			tmp_thetas[theta] *= self.learning_rate * (1.0 / m)
+			self.thetas[theta] -= tmp_thetas[theta]
 
 	@staticmethod
 	def __estimate_price(mileage: int, thetas: np.ndarray) -> float:
@@ -45,6 +63,7 @@ class LinearRegression:
 			self.columns = [str(col) for col in df.columns]
 			self.x = normalize(self.data[:, :-1], minmax_normalizing)
 			self.y = self.data[:, -1]
+			self.bonus = bool(self.x.shape[1] >= 2)
 			return self.data[:, :-1], self.data[:, -1]
 		except FileNotFoundError:
 			print(f'Error finding {filename}.', file = sys.stderr)
@@ -66,18 +85,30 @@ class LinearRegression:
 			print('Please supply a valid path to the thetas file.', file = sys.stderr)
 			exit(1)
 		self.thetas = np.array(thetas, dtype = float)
-		assert len(self.thetas) == 2
+		# self.bonus = bool(self.thetas.shape[0] > 2)
+		assert self.thetas.shape[0] == self.x.shape[1] + 1
 
 	def train(self):
 		self.thetas = np.zeros(shape = (self.x.shape[1] + 1, 1), dtype = float)
 		for iteration in range(self.iterations):
-			self.__update_thetas()
+			if self.bonus:
+				self.__update_thetas_bonus()
+			else:
+				self.__update_thetas()
+
+	def __predict_bonus(self, params: list[int]) -> float:
+		mins = [min(self.data[:, i]) for i in range(self.data.shape[1])]
+		maxs = [max(self.data[:, i]) for i in range(self.data.shape[1])]
+		normalized = [(param - mins[i]) / (maxs[i] - mins[i]) for i, param in enumerate(params)]
+		return max(0.0, self.__estimate_price_bonus(np.array(normalized, dtype = float), self.thetas))
 
 	def predict(self, mileage) -> float:
+		if self.bonus:
+			return self.__predict_bonus(mileage)
 		kms, prices = self.data[:, 0], self.data[:, -1]
 		min_km, max_km = min(kms), max(kms)
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
-		return self.__estimate_price(normalized_mileage, self.thetas)
+		return max(0.0, self.__estimate_price(normalized_mileage, self.thetas))
 
 	def __get_regression_line(self):
 		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])

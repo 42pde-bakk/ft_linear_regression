@@ -11,10 +11,11 @@ def calculate_error(args: argparse.Namespace):
 	linreg.load_thetas(args.thetas_file)
 
 	sum_total = sum_of_errors_squared = 0
-	for mileage, actual_price in linreg.data:
-		estimated_price = linreg.predict(mileage)
-		sum_of_errors_squared += pow(actual_price - estimated_price, 2)
-		sum_total += pow(actual_price, 2)
+	for row in linreg.data:
+		features, price = row[:-1], row[-1]
+		estimated_price = linreg.predict(features)
+		sum_of_errors_squared += pow(price - estimated_price, 2)
+		sum_total += pow(price, 2)
 	mse = sum_of_errors_squared / linreg.data.shape[0]
 	sum_total /= linreg.data.shape[0]
 	if args.verbose:
@@ -26,8 +27,7 @@ def calculate_error(args: argparse.Namespace):
 def parse_arguments():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('data_file', nargs = '?', action = 'store', help = 'Data.csv', default = 'data.csv')
-	parser.add_argument('thetas_file', nargs = '?', action = 'store', help = 'File for the theta values',
-	                    default = 'thetas.csv')
+	parser.add_argument('thetas_file', nargs = '?', action = 'store', help = 'File for the theta values', default = 'thetas.csv')
 	parser.add_argument('--verbose', '-v', action = 'store_true', help = 'Show the mean squared error')
 
 	a = parser.parse_args()
