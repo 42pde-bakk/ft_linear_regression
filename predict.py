@@ -37,8 +37,8 @@ def predict_car_price(args: argparse.Namespace):
 
 def parse_arguments():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('thetas_file', nargs='?', action='store', help='File for the theta values', default=None)
-	parser.add_argument('data_file', nargs='?', action='store', help='Data.csv', default=None)
+	parser.add_argument('data_file', nargs='?', action='store', help='Data.csv', default='data.csv')
+	parser.add_argument('thetas_file', nargs='?', action='store', help='File for the theta values', default='thetas.csv')
 	parser.add_argument('--verbose', '-v', action='store_true', help='Show the mean squared error')
 
 	a = parser.parse_args()

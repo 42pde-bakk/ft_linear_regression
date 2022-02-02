@@ -46,25 +46,25 @@ class LinearRegression:
 			self.y = self.data[:, -1]
 			return self.data[:, :-1], self.data[:, -1]
 		except FileNotFoundError:
-			print('Please supply a valid path to the data.csv file.', file = sys.stderr)
+			print(f'Error finding {filename}.', file = sys.stderr)
 			exit(1)
 		except ValueError:
-			print('Are you supplied the right data.csv file?', file = sys.stderr)
+			print(f'Are you sure {filename} contains the right data?', file = sys.stderr)
 			exit(1)
 
-	def save_thetas(self) -> None:
-		with open('thetas.csv', 'w') as f:
+	def save_thetas(self, thetas_file: str) -> None:
+		with open(thetas_file, 'w') as f:
 			for th in self.thetas:
 				f.write(str(float(th)) + '\n')
 
 	def load_thetas(self, filename: str):
 		try:
 			with open(filename, 'r') as f:
-				lines = [float(row) for row in f.read().splitlines()]
+				thetas = [float(row) for row in f.read().splitlines()]
 		except FileNotFoundError:
 			print('Please supply a valid path to the thetas file.', file = sys.stderr)
 			exit(1)
-		self.thetas = np.array(lines, dtype = float)
+		self.thetas = np.array(thetas, dtype = float)
 		assert len(self.thetas) == 2
 
 	def train(self):
