@@ -1,6 +1,4 @@
 import argparse
-import cProfile
-import pstats
 import sys
 import time
 
