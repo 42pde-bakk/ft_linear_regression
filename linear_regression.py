@@ -85,7 +85,6 @@ class LinearRegression:
 			print('Please supply a valid path to the thetas file.', file = sys.stderr)
 			exit(1)
 		self.thetas = np.array(thetas, dtype = float)
-		# self.bonus = bool(self.thetas.shape[0] > 2)
 		assert self.thetas.shape[0] == self.x.shape[1] + 1
 
 	def train(self):
@@ -110,21 +109,36 @@ class LinearRegression:
 		normalized_mileage = (mileage - min_km) / (max_km - min_km)
 		return max(0.0, self.__estimate_price(normalized_mileage, self.thetas))
 
-	def __get_regression_line(self):
-		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])
+	def __get_regression_line(self, col_nb: int = 0):
+		min_x, max_x = min(self.data[:, col_nb]), max(self.data[:, col_nb])
 		xy1 = min_x, float(self.predict(min_x))
 		xy2 = max_x, float(self.predict(max_x))
 		return xy1, xy2
 
+	def plot_bonus(self, preds: np.ndarray = None):
+		plt.close('all')
+		figure, axes = plt.subplots(self.data.shape[1] - 1)
+		for col_nb in range(0, self.data.shape[1] - 1):
+			axes[col_nb].set_xlabel(self.columns[col_nb])
+			axes[col_nb].set_ylabel(self.columns[-1])
+			axes[col_nb].plot(self.data[:, col_nb], self.data[:, -1], 'ok')
+			if preds is not None:
+				axes[col_nb].plot(preds[:, col_nb], preds[:, -1], 'bo')
+		plt.show()
+
 	def plot(self):
+		if self.bonus:
+			return self.plot_bonus()
 		plt.xlabel(self.columns[0])
 		plt.ylabel(self.columns[1])
 		plt.plot(self.data[:, 0], self.data[:, -1], 'ok')
 		xy1, xy2 = self.__get_regression_line()
-		print(f'xy1={xy1}, xy2={xy2}')
 		plt.axline(xy1 = xy1, xy2 = xy2, color = 'purple', label = 'Regression line')
 		plt.show()
 
-	def plot_predictions(self, inputs: list, outputs: list):
-		plt.plot(inputs, outputs, 'bo')
+	def plot_predictions(self, preds: np.ndarray):
+		plt.close('all')
+		if self.bonus:
+			return self.plot_bonus(preds = preds)
+		plt.plot(preds[:, 0], preds[:, -1], 'bo')
 		self.plot()
