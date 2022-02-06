@@ -112,24 +112,17 @@ class LinearRegression:
 
 	def __get_regression_line(self):
 		min_x, max_x = min(self.data[:, 0]), max(self.data[:, 0])
-		min_y, max_y = min(self.data[:, -1]), max(self.data[:, -1])
-		line_x, line_y = [min_x, max_x], []
-		for point in line_x:
-			normalized_x = (point - min_x) / (max_x - min_x)
-			point = float(self.thetas[1]) * normalized_x + float(self.thetas[0])
-			if point != 0:
-				denormalized_y = point * (max_y - min_y) + min_y
-			else:
-				denormalized_y = 0
-			line_y.append(denormalized_y)
-		return line_x, line_y
+		xy1 = min_x, float(self.predict(min_x))
+		xy2 = max_x, float(self.predict(max_x))
+		return xy1, xy2
 
 	def plot(self):
 		plt.xlabel(self.columns[0])
 		plt.ylabel(self.columns[1])
 		plt.plot(self.data[:, 0], self.data[:, -1], 'ok')
-		line_x, line_y = self.__get_regression_line()
-		plt.plot(line_x, line_y, 'tab:pink', label = "Best line")
+		xy1, xy2 = self.__get_regression_line()
+		print(f'xy1={xy1}, xy2={xy2}')
+		plt.axline(xy1 = xy1, xy2 = xy2, color = 'purple', label = 'Regression line')
 		plt.show()
 
 	def plot_predictions(self, inputs: list, outputs: list):
