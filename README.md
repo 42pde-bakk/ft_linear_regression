@@ -18,4 +18,4 @@ python3 train.py data.csv
 python3 predict.py thetas.csv data.csv
 ```
 
-## Project status: [![Ft_linear_regression status](https://badge42.herokuapp.com/api/project/pde-bakk/ft_linear_regression)](https://github.com/JaeSeoKim/badge42)
+## Project status: [![Ft_linear_regression status](https://badge42.vercel.app/api/v2/cl1kxvlgu002109lfx5bumh9s/project/2472428)](https://github.com/JaeSeoKim/badge42)
